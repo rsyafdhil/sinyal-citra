@@ -8,6 +8,10 @@ Mencakup semua topik sesuai silabus:
   3. The Dual Domains (Waktu vs Frekuensi)
   4. Transformational Thinking (FFT Pipeline)
   5. Systems and Convolution
+  ── Pengolahan Sinyal 2D (Gambar) ──
+  6. Sinyal 2D & Gambar Dasar
+  7. Konvolusi 2D (Spatial Domain)
+  8. FFT 2D & Filtering Frekuensi
 """
 
 from signals import (
@@ -31,6 +35,9 @@ from visualizer import (
     plot_dual_domain, plot_fft_pipeline,
     plot_convolution, plot_convolution_comparison
 )
+
+# ── Modul 2D baru ──
+from menu_2d import menu_sinyal_2d, menu_konvolusi_2d, menu_fft2d
 
 
 # ═══════════════════════════════════════════════════════
@@ -178,7 +185,6 @@ def menu_kontinu_diskrit():
             pause()
 
         elif pilihan == "4":
-            # Tampilkan semua perbandingan sekaligus
             for label, fs in [("Sinus (fs=10 Hz)", 10), ("Sinus (fs=40 Hz)", 40)]:
                 t_c, x_c = sine_signal(frequency=2.0, t_range=(0, 2), num_points=500)
                 n_d, x_d = discrete_sine(frequency=2.0, sampling_rate=fs, t_range=(0, 2))
@@ -356,11 +362,11 @@ def menu_konvolusi():
 
 
 # ═══════════════════════════════════════════════════════
-#  MODUL 6 — TAMPILKAN SEMUA GRAFIK
+#  MODUL 9 — TAMPILKAN SEMUA GRAFIK
 # ═══════════════════════════════════════════════════════
 
 def tampilkan_semua():
-    print("\n  Menampilkan semua grafik... (tunggu sebentar)\n")
+    print("\n  Menampilkan semua grafik 1D... (tunggu sebentar)\n")
 
     # 1. Sinyal dasar
     n_d, x_d     = delta_signal()
@@ -404,7 +410,7 @@ def tampilkan_semua():
     x_rec = ifft(X)
     plot_fft_pipeline(t, x, freqs, mag, x_rec, "Sinyal Gabungan")
 
-    # 5. Konvolusi
+    # 5. Konvolusi 1D
     _, x_sin = discrete_sine(frequency=1.0, sampling_rate=30, t_range=(0, 2))
     h_ma     = kernel_moving_average(size=7)
     y_dir    = convolve_direct(x_sin, h_ma)
@@ -427,13 +433,19 @@ def main():
         print("║      SIGNAL PROCESSING DEMO — Python Edition      ║")
         print("║         Pengolahan Sinyal, Sistem & Citra          ║")
         print("╠═══════════════════════════════════════════════════╣")
+        print("║  ── Sinyal 1D ──────────────────────────────────  ║")
         print("║  [1]  Sinyal Dasar (Mathematical Language)         ║")
         print("║  [2]  What is a Signal? (Kontinu vs Diskrit)       ║")
         print("║  [3]  The Dual Domains (Waktu vs Frekuensi)        ║")
         print("║  [4]  Transformational Thinking (FFT Pipeline)     ║")
         print("║  [5]  Systems and Convolution                      ║")
-        print("║  [6]  Tampilkan Semua Grafik                       ║")
-        print("║  [0]  Keluar                                       ║")
+        print("║  ── Sinyal 2D (Gambar / Citra) ─────────────────  ║")
+        print("║  [6]  Sinyal 2D & Gambar Dasar                     ║")
+        print("║  [7]  Konvolusi 2D (Spatial Domain)                ║")
+        print("║  [8]  FFT 2D & Filtering Frekuensi                 ║")
+        print("║  ─────────────────────────────────────────────── ║")
+        print("║  [9]  Tampilkan Semua Grafik 1D                    ║")
+        print("║  [0]  Keluar                                        ║")
         print("╚═══════════════════════════════════════════════════╝")
         print()
         pilihan = input("  Pilih menu: ").strip()
@@ -443,7 +455,10 @@ def main():
         elif pilihan == "3": menu_dual_domain()
         elif pilihan == "4": menu_fft_pipeline()
         elif pilihan == "5": menu_konvolusi()
-        elif pilihan == "6": tampilkan_semua()
+        elif pilihan == "6": menu_sinyal_2d()
+        elif pilihan == "7": menu_konvolusi_2d()
+        elif pilihan == "8": menu_fft2d()
+        elif pilihan == "9": tampilkan_semua()
         elif pilihan == "0":
             print("\n  Sampai jumpa! 👋\n")
             break

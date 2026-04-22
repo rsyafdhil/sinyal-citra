@@ -12,6 +12,8 @@ Mencakup semua topik sesuai silabus:
   6. Sinyal 2D & Gambar Dasar
   7. Konvolusi 2D (Spatial Domain)
   8. FFT 2D & Filtering Frekuensi
+  ── Pengolahan Sinyal Audio ──────────
+  10. Audio Signal Processing (WAV)
 """
 
 from signals import (
@@ -36,8 +38,11 @@ from visualizer import (
     plot_convolution, plot_convolution_comparison
 )
 
-# ── Modul 2D baru ──
+# ── Modul 2D ──
 from menu_2d import menu_sinyal_2d, menu_konvolusi_2d, menu_fft2d
+
+# ── Modul Audio (BARU) ──
+from menu_audio import menu_audio
 
 
 # ═══════════════════════════════════════════════════════
@@ -368,7 +373,6 @@ def menu_konvolusi():
 def tampilkan_semua():
     print("\n  Menampilkan semua grafik 1D... (tunggu sebentar)\n")
 
-    # 1. Sinyal dasar
     n_d, x_d     = delta_signal()
     n_s, x_s     = step_signal()
     t_sin, x_sin = sine_signal(frequency=2.0)
@@ -385,13 +389,11 @@ def tampilkan_semua():
         {"title": "Sinus Diskrit x[n]",  "t": n_ds,  "x": x_ds,  "discrete": True},
     ])
 
-    # 2. Kontinu vs diskrit
     t_c, x_c = sine_signal(frequency=2.0, t_range=(0, 2), num_points=500)
     n_d2, x_d2 = discrete_sine(frequency=2.0, sampling_rate=20, t_range=(0, 2))
     t_d_plot = [i / 20 for i in n_d2]
     plot_continuous_vs_discrete(t_c, x_c, t_d_plot, x_d2, "Sinus 2 Hz (fs=20 Hz)")
 
-    # 3. Dual domain
     fs = 200
     t, x = composite_signal([3.0, 7.0, 15.0], [1.0, 0.6, 0.4],
                              t_range=(0, 1), num_points=fs)
@@ -400,7 +402,6 @@ def tampilkan_semua():
     freqs = get_frequency_axis(len(X), fs)
     plot_dual_domain(t, x, freqs, mag, "Sinyal Gabungan (3+7+15 Hz)")
 
-    # 4. FFT Pipeline
     fs = 256
     t, x = composite_signal([3.0, 7.0, 15.0], [1.0, 0.6, 0.4],
                              t_range=(0, 1), num_points=fs)
@@ -410,7 +411,6 @@ def tampilkan_semua():
     x_rec = ifft(X)
     plot_fft_pipeline(t, x, freqs, mag, x_rec, "Sinyal Gabungan")
 
-    # 5. Konvolusi 1D
     _, x_sin = discrete_sine(frequency=1.0, sampling_rate=30, t_range=(0, 2))
     h_ma     = kernel_moving_average(size=7)
     y_dir    = convolve_direct(x_sin, h_ma)
@@ -429,36 +429,39 @@ def tampilkan_semua():
 def main():
     while True:
         clear()
-        print("╔═══════════════════════════════════════════════════╗")
-        print("║      SIGNAL PROCESSING DEMO — Python Edition      ║")
-        print("║         Pengolahan Sinyal, Sistem & Citra          ║")
-        print("╠═══════════════════════════════════════════════════╣")
-        print("║  ── Sinyal 1D ──────────────────────────────────  ║")
-        print("║  [1]  Sinyal Dasar (Mathematical Language)         ║")
-        print("║  [2]  What is a Signal? (Kontinu vs Diskrit)       ║")
-        print("║  [3]  The Dual Domains (Waktu vs Frekuensi)        ║")
-        print("║  [4]  Transformational Thinking (FFT Pipeline)     ║")
-        print("║  [5]  Systems and Convolution                      ║")
-        print("║  ── Sinyal 2D (Gambar / Citra) ─────────────────  ║")
-        print("║  [6]  Sinyal 2D & Gambar Dasar                     ║")
-        print("║  [7]  Konvolusi 2D (Spatial Domain)                ║")
-        print("║  [8]  FFT 2D & Filtering Frekuensi                 ║")
-        print("║  ─────────────────────────────────────────────── ║")
-        print("║  [9]  Tampilkan Semua Grafik 1D                    ║")
-        print("║  [0]  Keluar                                        ║")
-        print("╚═══════════════════════════════════════════════════╝")
+        print("╔═══════════════════════════════════════════════════════╗")
+        print("║      SIGNAL PROCESSING DEMO — Python Edition          ║")
+        print("║       Pengolahan Sinyal, Sistem, Citra & Audio         ║")
+        print("╠═══════════════════════════════════════════════════════╣")
+        print("║  ── Sinyal 1D ────────────────────────────────────── ║")
+        print("║  [1]  Sinyal Dasar (Mathematical Language)             ║")
+        print("║  [2]  What is a Signal? (Kontinu vs Diskrit)           ║")
+        print("║  [3]  The Dual Domains (Waktu vs Frekuensi)            ║")
+        print("║  [4]  Transformational Thinking (FFT Pipeline)         ║")
+        print("║  [5]  Systems and Convolution                          ║")
+        print("║  ── Sinyal 2D (Gambar / Citra) ─────────────────────  ║")
+        print("║  [6]  Sinyal 2D & Gambar Dasar                         ║")
+        print("║  [7]  Konvolusi 2D (Spatial Domain)                    ║")
+        print("║  [8]  FFT 2D & Filtering Frekuensi                     ║")
+        print("║  ── Sinyal Audio ────────────────────────────────────  ║")
+        print("║  [10] Audio Signal Processing (File WAV)               ║")
+        print("║  ─────────────────────────────────────────────────── ║")
+        print("║  [9]  Tampilkan Semua Grafik 1D                        ║")
+        print("║  [0]  Keluar                                            ║")
+        print("╚═══════════════════════════════════════════════════════╝")
         print()
         pilihan = input("  Pilih menu: ").strip()
 
-        if   pilihan == "1": menu_sinyal_dasar()
-        elif pilihan == "2": menu_kontinu_diskrit()
-        elif pilihan == "3": menu_dual_domain()
-        elif pilihan == "4": menu_fft_pipeline()
-        elif pilihan == "5": menu_konvolusi()
-        elif pilihan == "6": menu_sinyal_2d()
-        elif pilihan == "7": menu_konvolusi_2d()
-        elif pilihan == "8": menu_fft2d()
-        elif pilihan == "9": tampilkan_semua()
+        if   pilihan == "1":  menu_sinyal_dasar()
+        elif pilihan == "2":  menu_kontinu_diskrit()
+        elif pilihan == "3":  menu_dual_domain()
+        elif pilihan == "4":  menu_fft_pipeline()
+        elif pilihan == "5":  menu_konvolusi()
+        elif pilihan == "6":  menu_sinyal_2d()
+        elif pilihan == "7":  menu_konvolusi_2d()
+        elif pilihan == "8":  menu_fft2d()
+        elif pilihan == "10": menu_audio()
+        elif pilihan == "9":  tampilkan_semua()
         elif pilihan == "0":
             print("\n  Sampai jumpa! 👋\n")
             break
